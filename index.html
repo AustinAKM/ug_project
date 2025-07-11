@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AutoSphere - Your Trusted Automotive Marketplace</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* Enhanced image styles */
+      .car-image {
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+      }
+      
+      .car-image img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+      
+      .car-image:hover img {
+        transform: scale(1.05);
+      }
+      
+      .image-placeholder {
+        width: 100%;
+        height: 200px;
+        border-radius: 8px;
+      }
+      
+      .loading-spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      .image-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <!-- Navigation -->
+      <nav class="navbar">
+        <div class="nav-container">
+          <a class="logo" @click.prevent="currentView = 'home'">AutoSphere</a>
+          <div class="nav-links">
+            <a
+              class="nav-link"
+              :class="{active: currentView === 'home'}"
+              @click="currentView = 'home'"
+              >Home</a
+            >
+            <a
+              class="nav-link"
+              :class="{active: currentView === 'browse'}"
+              @click="currentView = 'browse'"
+              >Browse Cars</a
+            >
+            <a
+              class="nav-link"
+              :class="{active: currentView === 'favorites'}"
+              @click="currentView = 'favorites'"
+              >My Favorites</a
+            >
+            <a
+              class="nav-link"
+              :class="{active: currentView === 'sell'}"
+              @click="currentView = 'sell'"
+              >Sell Your Car</a
+            >
+            <a class="nav-link" @click="currentView = 'about'">About</a>
+          </div>
+          <div class="user-actions">
+            <button
+              v-if="!isLoggedIn"
+              class="btn btn-outline"
+              @click="openLogin"
+            >
+              Login
+            </button>
+            <button
+              v-if="!isLoggedIn"
+              class="btn btn-primary"
+              @click="openSignup"
+            >
+              Sign Up
+            </button>
+            <div
+              v-if="isLoggedIn"
+              style="display: flex; align-items: center; gap: 1rem"
+            >
+              <span style="color: var(--text-light)"
+                >Welcome, {{ user.name }}!</span
+              >
+              <button class="btn btn-outline" @click="logout">Logout</button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main>
+        <!-- Home View -->
+        <div v-if="currentView === 'home'">
+          <!-- Hero Section -->
+          <section class="hero">
+            <div class="container">
+              <h1>Find Your Perfect Car</h1>
+              <p>
+                Discover the best deals on quality vehicles with our
+                personalized recommendations
+              </p>
+              <div class="search-container">
+                <div class="search-bar">
+                  <input
+                    type="text"
+                    class="search-input"
+                    v-model="searchQuery"
+                    placeholder="Search by make, model, or keyword..."
+                  />
+                  <button class="search-btn" @click="searchCars">Search</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Features Section -->
+          <section class="features">
+            <div class="container">
+              <h2
+                style="
+                  text-align: center;
+                  font-size: 2.5rem;
+                  margin-bottom: 1rem;
+                "
+              >
+                Why Choose AutoSphere?
+              </h2>
+              <p
+                style="
+                  text-align: center;
+                  color: var(--gray-medium);
+                  font-size: 1.1rem;
+                "
+              >
+                Experience the future of car buying with our innovative platform
+              </p>
+              <div class="features-grid">
+                <div class="feature-card">
+                  <div class="feature-icon">🎯</div>
+                  <h3 class="feature-title">Personalized Recommendations</h3>
+                  <p class="feature-description">
+                    Our AI-powered system finds cars that match your preferences
+                    and budget
+                  </p>
+                </div>
+                <div class="feature-card">
+                  <div class="feature-icon">✨</div>
+                  <h3 class="feature-title">Transparent Pricing</h3>
+                  <p class="feature-description">
+                    See complete pricing breakdowns including taxes, fees, and
+                    insurance options
+                  </p>
+                </div>
+                <div class="feature-card">
+                  <div class="feature-icon">🛡️</div>
+                  <h3 class="feature-title">Verified Listings</h3>
+                  <p class="feature-description">
+                    All vehicles undergo thorough verification to ensure quality
+                    and authenticity
+                  </p>
+                </div>
+                <div class="feature-card">
+                  <div class="feature-icon">📱</div>
+                  <h3 class="feature-title">Seamless Experience</h3>
+                  <p class="feature-description">
+                    Browse, compare, and purchase from the comfort of your home
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Featured Cars -->
+          <section class="container">
+            <h2 style="font-size: 2rem; margin-bottom: 2rem">
+              Featured Vehicles
+            </h2>
+            
+            <!-- Loading State for Featured Cars -->
+            <div v-if="loadingFeatured" style="text-align: center; padding: 4rem 0">
+              <div class="loading-spinner"></div>
+              <p style="margin-top: 1rem; color: var(--gray-medium)">Loading featured cars...</p>
+            </div>
+            
+            <!-- Featured Cars Grid -->
+            <div v-else class="car-grid">
+              <div
+                v-for="car in featuredCars"
+                :key="car._id"
+                class="car-card"
+                @click="viewCarDetails(car)"
+              >
+                <div class="car-image">
+                  <img 
+                    :src="getCarImageUrl(car)" 
+                    :alt="`${car.make} ${car.model} ${car.year}`"
+                    @error="handleImageError($event, car)"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="car-details">
+                  <h3 class="car-title">{{ car.make }} {{ car.model }}</h3>
+                  <div class="car-specs">
+                    <span>{{ car.year }}</span>
+                    <span>•</span>
+                    <span>{{ car.mileage?.toLocaleString() || 'N/A' }} km</span>
+                    <span>•</span>
+                    <span>{{ car.fuel }}</span>
+                  </div>
+                  <div class="car-price">
+                    AED {{ car.price?.toLocaleString() || 'N/A' }}
+                  </div>
+                  <div class="car-actions">
+                    <button class="btn btn-primary" style="flex: 1">
+                      View Details
+                    </button>
+                    <button
+                      class="favorite-btn"
+                      :class="{active: isFavorite(car._id)}"
+                      @click.stop="toggleFavorite(car)"
+                    >
+                      {{ isFavorite(car._id) ? '❤️' : '🤍' }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Browse Cars View -->
+        <div v-if="currentView === 'browse'" class="container">
+          <h1 style="margin-bottom: 2rem">Browse All Cars</h1>
+
+          <!-- Filters -->
+          <div class="filters">
+            <h3 style="margin-bottom: 1rem">Filter Your Search</h3>
+            <div class="filter-grid">
+              <div class="filter-group">
+                <label class="filter-label">Make</label>
+                <select class="filter-select" v-model="filters.make">
+                  <option value="">All Makes</option>
+                  <option value="Toyota">Toyota</option>
+                  <option value="Honda">Honda</option>
+                  <option value="Mercedes">Mercedes-Benz</option>
+                  <option value="BMW">BMW</option>
+                  <option value="Nissan">Nissan</option>
+                  <option value="Audi">Audi</option>
+                  <option value="Porsche">Porsche</option>
+                  <option value="Range Rover">Range Rover</option>
+                  <option value="Tesla">Tesla</option>
+                  <option value="Mazda">Mazda</option>
+                  <option value="Ford">Ford</option>
+                  <option value="Chevrolet">Chevrolet</option>
+                  <option value="Kia">Kia</option>
+                  <option value="Hyundai">Hyundai</option>
+                  <option value="Volkswagen">Volkswagen</option>
+                  <option value="Mitsubishi">Mitsubishi</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label class="filter-label">Price Range</label>
+                <select class="filter-select" v-model="filters.priceRange">
+                  <option value="">Any Price</option>
+                  <option value="0-50000">Under AED 50,000</option>
+                  <option value="50000-100000">AED 50,000 - 100,000</option>
+                  <option value="100000-200000">AED 100,000 - 200,000</option>
+                  <option value="200000+">Above AED 200,000</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label class="filter-label">Year</label>
+                <select class="filter-select" v-model="filters.year">
+                  <option value="">Any Year</option>
+                  <option value="2025">2025</option>
+                  <option value="2024">2024</option>
+                  <option value="2023">2023</option>
+                  <option value="2022">2022</option>
+                  <option value="2021">2021</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label class="filter-label">Fuel Type</label>
+                <select class="filter-select" v-model="filters.fuel">
+                  <option value="">Any Fuel Type</option>
+                  <option value="Petrol">Petrol</option>
+                  <option value="Diesel">Diesel</option>
+                  <option value="Hybrid">Hybrid</option>
+                  <option value="Electric">Electric</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Loading State -->
+          <div v-if="loadingCars" style="text-align: center; padding: 4rem 0">
+            <div class="loading-spinner"></div>
+            <p style="margin-top: 1rem; font-size: 1.2rem; color: var(--gray-medium)">
+              Loading cars...
+            </p>
+          </div>
+
+          <!-- No Cars Found -->
+          <div
+            v-else-if="!loadingCars && cars.length === 0"
+            style="text-align: center; padding: 4rem 0"
+          >
+            <div style="font-size: 3rem; margin-bottom: 1rem">🔍</div>
+            <h3 style="margin-bottom: 1rem">No cars found</h3>
+            <p style="color: var(--gray-medium); margin-bottom: 2rem">
+              Try adjusting your filters or search terms to find more results.
+            </p>
+            <button
+              class="btn btn-primary"
+              @click="filters = {make: '', priceRange: '', year: '', fuel: ''}"
+            >
+              Clear Filters
+            </button>
+          </div>
+
+          <!-- Car Grid -->
+          <div v-else class="car-grid">
+            <div
+              v-for="car in cars"
+              :key="car._id"
+              class="car-card"
+              @click="viewCarDetails(car)"
+            >
+              <div class="car-image">
+                <img 
+                  :src="getCarImageUrl(car)" 
+                  :alt="`${car.make} ${car.model} ${car.year}`"
+                  @error="handleImageError($event, car)"
+                  loading="lazy"
+                />
+              </div>
+              <div class="car-details">
+                <h3 class="car-title">{{ car.make }} {{ car.model }}</h3>
+                <div class="car-specs">
+                  <span>{{ car.year }}</span>
+                  <span>•</span>
+                  <span>{{ car.mileage?.toLocaleString() || 'N/A' }} km</span>
+                  <span>•</span>
+                  <span>{{ car.fuel }}</span>
+                </div>
+                <div class="car-price">
+                  AED {{ car.price?.toLocaleString() || 'N/A' }}
+                </div>
+                <div class="car-actions">
+                  <button class="btn btn-primary" style="flex: 1">
+                    View Details
+                  </button>
+                  <button
+                    class="favorite-btn"
+                    :class="{active: isFavorite(car._id)}"
+                    @click.stop="toggleFavorite(car)"
+                  >
+                    {{ isFavorite(car._id) ? '❤️' : '🤍' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div
+            v-if="pagination.pages > 1"
+            class="pagination"
+            style="margin-top: 3rem"
+          >
+            <button
+              class="btn btn-outline"
+              @click="changePage(pagination.current - 1)"
+              :disabled="pagination.current === 1"
+            >
+              Previous
+            </button>
+            <span style="margin: 0 1rem">
+              Page {{ pagination.current }} of {{ pagination.pages }}
+            </span>
+            <button
+              class="btn btn-outline"
+              @click="changePage(pagination.current + 1)"
+              :disabled="pagination.current === pagination.pages"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+
+        <!-- Toast Container -->
+        <div
+          class="toast-container"
+          style="position: fixed; top: 20px; right: 20px; z-index: 1000"
+        >
+          <div
+            v-for="toast in toasts"
+            :key="toast.id"
+            class="toast"
+            :class="toast.type"
+          >
+            {{ toast.message }}
+          </div>
+        </div>
+
+        <!-- Favorites View -->
+        <div v-if="currentView === 'favorites'" class="container">
+          <h1 style="margin-bottom: 2rem">My Favorite Cars</h1>
+          
+          <!-- Loading State -->
+          <div v-if="loadingFavorites" style="text-align: center; padding: 4rem 0">
+            <div class="loading-spinner"></div>
+            <p style="margin-top: 1rem; color: var(--gray-medium)">Loading favorites...</p>
+          </div>
+          
+          <!-- Empty Favorites -->
+          <div
+            v-else-if="favorites.length === 0"
+            style="text-align: center; padding: 4rem 0"
+          >
+            <div style="font-size: 3rem; margin-bottom: 1rem">💔</div>
+            <h3 style="margin-bottom: 1rem">No favorites yet</h3>
+            <p
+              style="
+                font-size: 1.2rem;
+                color: var(--gray-medium);
+                margin-bottom: 2rem;
+              "
+            >
+              You haven't added any cars to your favorites yet.
+            </p>
+            <button class="btn btn-primary" @click="currentView = 'browse'">
+              Browse Cars
+            </button>
+          </div>
+          
+          <!-- Favorites Grid -->
+          <div v-else class="car-grid">
+            <div
+              v-for="car in favorites"
+              :key="car._id"
+              class="car-card"
+              @click="viewCarDetails(car)"
+            >
+              <div class="car-image">
+                <img 
+                  :src="getCarImageUrl(car)" 
+                  :alt="`${car.make} ${car.model} ${car.year}`"
+                  @error="handleImageError($event, car)"
+                  loading="lazy"
+                />
+              </div>
+              <div class="car-details">
+                <h3 class="car-title">{{ car.make }} {{ car.model }}</h3>
+                <div class="car-specs">
+                  <span>{{ car.year }}</span>
+                  <span>•</span>
+                  <span>{{ car.mileage?.toLocaleString() || 'N/A' }} km</span>
+                  <span>•</span>
+                  <span>{{ car.fuel }}</span>
+                </div>
+                <div class="car-price">
+                  AED {{ car.price?.toLocaleString() || 'N/A' }}
+                </div>
+                <div class="car-actions">
+                  <button class="btn btn-primary" style="flex: 1">
+                    View Details
+                  </button>
+                  <button
+                    class="favorite-btn active"
+                    @click.stop="toggleFavorite(car)"
+                  >
+                    ❤️
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sell Your Car View -->
+        <div v-if="currentView === 'sell'" class="container">
+          <h1 style="margin-bottom: 3rem; text-align: center">
+            Sell Your Car with AutoSphere
+          </h1>
+
+          <!-- Introduction Section -->
+          <div style="max-width: 800px; margin: 0 auto 3rem auto; text-align: center">
+            <p style="font-size: 1.2rem; color: var(--text-dark); line-height: 1.6; margin-bottom: 2rem">
+              Ready to sell your car? Our platform makes it easy to reach thousands of potential buyers. 
+              List your vehicle today and get the best value for your car.
+            </p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; margin-bottom: 3rem">
+              <div style="text-align: center">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem">📸</div>
+                <h3 style="margin-bottom: 0.5rem">Upload Photos</h3>
+                <p style="color: var(--gray-medium); font-size: 0.9rem">Add high-quality images of your car</p>
+              </div>
+              <div style="text-align: center">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem">📝</div>
+                <h3 style="margin-bottom: 0.5rem">Add Details</h3>
+                <p style="color: var(--gray-medium); font-size: 0.9rem">Provide comprehensive vehicle information</p>
+              </div>
+              <div style="text-align: center">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem">💰</div>
+                <h3 style="margin-bottom: 0.5rem">Set Your Price</h3>
+                <p style="color: var(--gray-medium); font-size: 0.9rem">Get market value recommendations</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sell Car Form -->
+          <div style="max-width: 600px; margin: 0 auto">
+            <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1)">
+              <h2 style="margin-bottom: 2rem; color: var(--primary-color)">List Your Vehicle</h2>
+              
+              <form @submit.prevent="handleSellCar">
+                <!-- Vehicle Information -->
+                <div style="margin-bottom: 2rem">
+                  <h3 style="margin-bottom: 1rem; color: var(--text-dark)">Vehicle Information</h3>
+                  
+                  <div class="form-group">
+                    <label class="form-label">Make *</label>
+                    <select class="form-input" v-model="sellForm.make" required>
+                      <option value="">Select Make</option>
+                      <option value="Toyota">Toyota</option>
+                      <option value="Honda">Honda</option>
+                      <option value="Mercedes">Mercedes-Benz</option>
+                      <option value="BMW">BMW</option>
+                      <option value="Nissan">Nissan</option>
+                      <option value="Audi">Audi</option>
+                      <option value="Porsche">Porsche</option>
+                      <option value="Range Rover">Range Rover</option>
+                      <option value="Tesla">Tesla</option>
+                      <option value="Mazda">Mazda</option>
+                      <option value="Ford">Ford</option>
+                      <option value="Chevrolet">Chevrolet</option>
+                      <option value="Kia">Kia</option>
+                      <option value="Hyundai">Hyundai</option>
+                      <option value="Volkswagen">Volkswagen</option>
+                      <option value="Mitsubishi">Mitsubishi</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Model *</label>
+                    <input type="text" class="form-input" v-model="sellForm.model" placeholder="e.g., Camry, Civic, C-Class" required />
+                  </div>
+
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem">
+                    <div class="form-group">
+                      <label class="form-label">Year *</label>
+                      <select class="form-input" v-model="sellForm.year" required>
+                        <option value="">Select Year</option>
+                        <option v-for="year in availableYears" :key="year" :value="year">{{ year }}</option>
+                      </select>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label class="form-label">Fuel Type *</label>
+                      <select class="form-input" v-model="sellForm.fuel" required>
+                        <option value="">Select Fuel Type</option>
+                        <option value="Petrol">Petrol</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Hybrid">Hybrid</option>
+                        <option value="Electric">Electric</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem">
+                    <div class="form-group">
+                      <label class="form-label">Mileage (km) *</label>
+                      <input type="number" class="form-input" v-model="sellForm.mileage" placeholder="e.g., 50000" required />
+                    </div>
+                    
+                    <div class="form-group">
+                      <label class="form-label">Transmission *</label>
+                      <select class="form-input" v-model="sellForm.transmission" required>
+                        <option value="">Select Transmission</option>
+                        <option value="Automatic">Automatic</option>
+                        <option value="Manual">Manual</option>
+                        <option value="CVT">CVT</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Color</label>
+                    <input type="text" class="form-input" v-model="sellForm.color" placeholder="e.g., White, Black, Silver" />
+                  </div>
+                </div>
+
+                <!-- Pricing -->
+                <div style="margin-bottom: 2rem">
+                  <h3 style="margin-bottom: 1rem; color: var(--text-dark)">Pricing</h3>
+                  
+                  <div class="form-group">
+                    <label class="form-label">Asking Price (AED) *</label>
+                    <input type="number" class="form-input" v-model="sellForm.price" placeholder="e.g., 75000" required />
+                    <small style="color: var(--gray-medium); font-size: 0.8rem">
+                      💡 Tip: Research similar vehicles to set a competitive price
+                    </small>
+                  </div>
+                </div>
+
+                <!-- Description -->
+                <div style="margin-bottom: 2rem">
+                  <h3 style="margin-bottom: 1rem; color: var(--text-dark)">Description</h3>
+                  
+                  <div class="form-group">
+                    <label class="form-label">Vehicle Description *</label>
+                    <textarea 
+                      class="form-input" 
+                      v-model="sellForm.description" 
+                      rows="4" 
+                      placeholder="Describe your vehicle's condition, features, maintenance history, and any additional details that would interest buyers..."
+                      required
+                    ></textarea>
+                  </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div style="margin-bottom: 2rem">
+                  <h3 style="margin-bottom: 1rem; color: var(--text-dark)">Contact Information</h3>
+                  
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem">
+                    <div class="form-group">
+                      <label class="form-label">Your Name *</label>
+                      <input type="text" class="form-input" v-model="sellForm.sellerName" :placeholder="user.name || 'Your full name'" required />
+                    </div>
+                    
+                    <div class="form-group">
+                      <label class="form-label">Phone Number *</label>
+                      <input type="tel" class="form-input" v-model="sellForm.phone" placeholder="+971 50 XXX XXXX" required />
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Email *</label>
+                    <input type="email" class="form-input" v-model="sellForm.email" :placeholder="user.email || 'your.email@example.com'" required />
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Location (City) *</label>
+                    <input type="text" class="form-input" v-model="sellForm.location" placeholder="e.g., Dubai, Abu Dhabi, Sharjah" required />
+                  </div>
+                </div>
+
+                <!-- Image Upload Section -->
+                <div style="margin-bottom: 2rem">
+                  <h3 style="margin-bottom: 1rem; color: var(--text-dark)">Photos</h3>
+                  
+                  <div style="border: 2px dashed var(--gray-light); border-radius: 8px; padding: 2rem; text-align: center; background: #fafafa">
+                    <div style="font-size: 3rem; margin-bottom: 1rem">📷</div>
+                    <h4 style="margin-bottom: 0.5rem">Add Photos of Your Car</h4>
+                    <p style="color: var(--gray-medium); margin-bottom: 1rem">
+                      High-quality photos help sell your car faster. Include exterior, interior, and engine photos.
+                    </p>
+                    <button type="button" class="btn btn-outline" style="margin-bottom: 1rem">
+                      Choose Photos
+                    </button>
+                    <p style="font-size: 0.8rem; color: var(--gray-medium)">
+                      Maximum 10 photos, 5MB each. Supported formats: JPG, PNG
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Terms and Submit -->
+                <div style="margin-bottom: 1rem">
+                  <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer">
+                    <input type="checkbox" v-model="sellForm.agreeTerms" required />
+                    <span style="font-size: 0.9rem">
+                      I agree to the <a href="#" style="color: var(--highlight-color)">Terms of Service</a> 
+                      and confirm that all information provided is accurate
+                    </span>
+                  </label>
+                </div>
+
+                <div v-if="sellError" style="color: red; margin-bottom: 1rem; font-size: 0.9rem">
+                  {{ sellError }}
+                </div>
+
+                <div v-if="sellSuccess" style="color: green; margin-bottom: 1rem; font-size: 0.9rem">
+                  {{ sellSuccess }}
+                </div>
+
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  style="width: 100%; font-size: 1.1rem; padding: 1rem"
+                  :disabled="isLoading || !sellForm.agreeTerms"
+                >
+                  <span v-if="isLoading" class="loading-spinner"></span>
+                  <span v-else>🚀 List My Car</span>
+                </button>
+              </form>
+            </div>
+
+            <!-- Benefits Section -->
+            <div style="margin-top: 3rem; background: var(--gray-light); padding: 2rem; border-radius: 12px">
+              <h3 style="margin-bottom: 1.5rem; text-align: center; color: var(--primary-color)">
+                Why Sell with AutoSphere?
+              </h3>
+              <div style="display: grid; gap: 1rem">
+                <div style="display: flex; align-items: center; gap: 0.75rem">
+                  <span style="color: var(--highlight-color); font-size: 1.2rem">✓</span>
+                  <span>Reach thousands of verified buyers actively looking for cars</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.75rem">
+                  <span style="color: var(--highlight-color); font-size: 1.2rem">✓</span>
+                  <span>Free listing for the first 30 days</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.75rem">
+                  <span style="color: var(--highlight-color); font-size: 1.2rem">✓</span>
+                  <span>Professional photo enhancement and listing optimization</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.75rem">
+                  <span style="color: var(--highlight-color); font-size: 1.2rem">✓</span>
+                  <span>Secure transaction handling and buyer verification</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.75rem">
+                  <span style="color: var(--highlight-color); font-size: 1.2rem">✓</span>
+                  <span>24/7 support throughout the selling process</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- About View -->
+        <div v-if="currentView === 'about'" class="container">
+          <h1 style="margin-bottom: 3rem; text-align: center">
+            About AutoSphere
+          </h1>
+
+          <div style="max-width: 800px; margin: 0 auto">
+            <div style="margin-bottom: 3rem">
+              <h2 style="color: var(--primary-color); margin-bottom: 1rem">
+                Our Mission
+              </h2>
+              <p
+                style="
+                  font-size: 1.1rem;
+                  line-height: 1.8;
+                  color: var(--text-dark);
+                "
+              >
+                AutoSphere is revolutionizing the automotive sales industry in
+                the UAE by creating a seamless, transparent, and trustworthy
+                online car buying experience. We bridge the gap between
+                traditional dealerships and modern digital convenience, making
+                car purchasing as simple as a few clicks.
+              </p>
+            </div>
+
+            <div style="margin-bottom: 3rem">
+              <h2 style="color: var(--primary-color); margin-bottom: 1rem">
+                Why We're Different
+              </h2>
+              <div style="display: grid; gap: 1.5rem">
+                <div style="display: flex; gap: 1rem; align-items: start">
+                  <span style="font-size: 2rem">🎯</span>
+                  <div>
+                    <h3 style="margin-bottom: 0.5rem">
+                      AI-Powered Recommendations
+                    </h3>
+                    <p>
+                      Our intelligent system analyzes your preferences, budget,
+                      and lifestyle to suggest the perfect vehicle matches.
+                    </p>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 1rem; align-items: start">
+                  <span style="font-size: 2rem">🔍</span>
+                  <div>
+                    <h3 style="margin-bottom: 0.5rem">Complete Transparency</h3>
+                    <p>
+                      Every vehicle undergoes thorough verification. See
+                      detailed history, pricing breakdowns, and all fees
+                      upfront.
+                    </p>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 1rem; align-items: start">
+                  <span style="font-size: 2rem">💡</span>
+                  <div>
+                    <h3 style="margin-bottom: 0.5rem">Simplified Process</h3>
+                    <p>
+                      From browsing to purchase, we've eliminated the
+                      complexity. No hidden surprises, no pressure tactics.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 3rem">
+              <h2 style="color: var(--primary-color); margin-bottom: 1rem">
+                Our Story
+              </h2>
+              <p
+                style="
+                  font-size: 1.1rem;
+                  line-height: 1.8;
+                  color: var(--text-dark);
+                "
+              >
+                Founded in 2025, AutoSphere emerged from a simple observation:
+                buying a car online shouldn't be complicated or risky. Our
+                founder, Aung Khant Moe, experienced firsthand the challenges of
+                traditional car buying - the multiple dealership visits,
+                aggressive sales tactics, and lack of transparency.
+              </p>
+              <p
+                style="
+                  font-size: 1.1rem;
+                  line-height: 1.8;
+                  color: var(--text-dark);
+                  margin-top: 1rem;
+                "
+              >
+                Today, AutoSphere serves customers across the UAE, offering a
+                curated selection of verified vehicles and a buying experience
+                that puts customer needs first. We're not just selling cars;
+                we're building trust in online automotive commerce.
+              </p>
+            </div>
+
+            <div
+              style="
+                background-color: var(--gray-light);
+                padding: 2rem;
+                border-radius: 10px;
+                margin-bottom: 3rem;
+              "
+            >
+              <h2 style="color: var(--primary-color); margin-bottom: 1rem">
+                Our Commitment
+              </h2>
+              <ul style="list-style: none; padding: 0">
+                <li
+                  style="
+                    margin-bottom: 1rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                  "
+                >
+                  <span style="color: var(--highlight-color)">✓</span>
+                  <span
+                    >Every vehicle is thoroughly inspected and verified</span
+                  >
+                </li>
+                <li
+                  style="
+                    margin-bottom: 1rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                  "
+                >
+                  <span style="color: var(--highlight-color)">✓</span>
+                  <span>Transparent pricing with no hidden fees</span>
+                </li>
+                <li
+                  style="
+                    margin-bottom: 1rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                  "
+                >
+                  <span style="color: var(--highlight-color)">✓</span>
+                  <span>7-day return policy for your peace of mind</span>
+                </li>
+                <li
+                  style="
+                    margin-bottom: 1rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                  "
+                >
+                  <span style="color: var(--highlight-color)">✓</span>
+                  <span>24/7 customer support throughout your journey</span>
+                </li>
+                <li style="display: flex; align-items: center; gap: 0.5rem">
+                  <span style="color: var(--highlight-color)">✓</span>
+                  <span>Secure online transactions and data protection</span>
+                </li>
+              </ul>
+            </div>
+
+            <div style="text-align: center">
+              <h2 style="color: var(--primary-color); margin-bottom: 1rem">
+                Ready to Find Your Perfect Car?
+              </h2>
+              <p style="font-size: 1.1rem; margin-bottom: 2rem">
+                Join thousands of satisfied customers who've discovered a better
+                way to buy cars.
+              </p>
+              <button
+                class="btn btn-primary"
+                @click="currentView = 'browse'"
+                style="font-size: 1.1rem; padding: 1rem 2rem"
+              >
+                Browse Our Inventory
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="container">
+          <div class="footer-content">
+            <div class="footer-section">
+              <h3>About AutoSphere</h3>
+              <p>
+                Your trusted partner in finding the perfect vehicle. We combine
+                technology with transparency to make car buying seamless.
+              </p>
+            </div>
+            <div class="footer-section">
+              <h3>Quick Links</h3>
+              <ul class="footer-links">
+                <li><a href="#">Browse Cars</a></li>
+                <li><a href="#">How It Works</a></li>
+                <li><a href="#">Financing Options</a></li>
+                <li><a href="#">Contact Support</a></li>
+              </ul>
+            </div>
+            <div class="footer-section">
+              <h3>Contact Info</h3>
+              <ul class="footer-links">
+                <li>📍 Bur Dubai, Dubai, UAE</li>
+                <li>📧 info@autosphere.ae</li>
+                <li>📞 +971 4 XXX XXXX</li>
+              </ul>
+            </div>
+            <div class="footer-section">
+              <h3>Follow Us</h3>
+              <p>Stay updated with our latest offers and inventory</p>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <p>
+              &copy; 2025 AutoSphere. All rights reserved. | Developed by Aung
+              Khant Moe
+            </p>
+          </div>
+        </div>
+      </footer>
+
+      <!-- Login/Signup Modal -->
+      <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
+        <div class="modal">
+          <div class="modal-header">
+            <h2 class="modal-title">Welcome to AutoSphere</h2>
+            <button class="close-btn" @click="closeModal">✕</button>
+          </div>
+
+          <div class="form-tabs">
+            <button
+              class="tab-btn"
+              :class="{active: modalType === 'login'}"
+              @click="modalType = 'login'"
+            >
+              Login
+            </button>
+            <button
+              class="tab-btn"
+              :class="{active: modalType === 'signup'}"
+              @click="modalType = 'signup'"
+            >
+              Sign Up
+            </button>
+          </div>
+
+          <!-- Login Form -->
+          <form v-if="modalType === 'login'" @submit.prevent="handleLogin">
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-input"
+                v-model="loginForm.email"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-input"
+                v-model="loginForm.password"
+                required
+              />
+            </div>
+            <div v-if="loginError" style="color: red; margin-bottom: 1rem; font-size: 0.9rem">
+              {{ loginError }}
+            </div>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              style="width: 100%; margin-top: 0.5rem"
+              :disabled="isLoading"
+            >
+              <span v-if="isLoading" class="loading-spinner"></span>
+              <span v-else>Login</span>
+            </button>
+            <p
+              style="
+                text-align: center;
+                margin-top: 1rem;
+                font-size: 0.85rem;
+                color: var(--gray-medium);
+              "
+            >
+              Don't have an account?
+              <a
+                href="#"
+                @click.prevent="modalType = 'signup'"
+                style="color: var(--highlight-color); text-decoration: none"
+                >Sign up</a
+              >
+            </p>
+          </form>
+
+          <!-- Signup Form -->
+          <form v-if="modalType === 'signup'" @submit.prevent="handleSignup">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input
+                type="text"
+                class="form-input"
+                v-model="signupForm.name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-input"
+                v-model="signupForm.email"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-input"
+                v-model="signupForm.password"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Confirm Password</label>
+              <input
+                type="password"
+                class="form-input"
+                v-model="signupForm.confirmPassword"
+                required
+              />
+            </div>
+            <div v-if="signupError" style="color: red; margin-bottom: 1rem; font-size: 0.9rem">
+              {{ signupError }}
+            </div>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              style="width: 100%; margin-top: 0.5rem"
+              :disabled="isLoading"
+            >
+              <span v-if="isLoading" class="loading-spinner"></span>
+              <span v-else>Sign Up</span>
+            </button>
+            <p
+              style="
+                text-align: center;
+                margin-top: 1rem;
+                font-size: 0.85rem;
+                color: var(--gray-medium);
+              "
+            >
+              Already have an account?
+              <a
+                href="#"
+                @click.prevent="modalType = 'login'"
+                style="color: var(--highlight-color); text-decoration: none"
+                >Login</a
+              >
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    // API Configuration
+                    API_URL: 'http://localhost:5173/api',
+                    
+                    // UI State
+                    currentView: 'home',
+                    showModal: false,
+                    modalType: 'login',
+                    isLoading: false,
+                    loadingCars: false,
+                    loadingFeatured: false,
+                    loadingFavorites: false,
+                    
+                    // Authentication
+                    isLoggedIn: false,
+                    token: null,
+                    user: {
+                        name: '',
+                        email: ''
+                    },
+                    
+                    // Forms
+                    searchQuery: '',
+                    loginForm: {
+                        email: '',
+                        password: ''
+                    },
+                    signupForm: {
+                        name: '',
+                        email: '',
+                        password: '',
+                        confirmPassword: ''
+                    },
+                    sellForm: {
+                        make: '',
+                        model: '',
+                        year: '',
+                        fuel: '',
+                        mileage: '',
+                        transmission: '',
+                        color: '',
+                        price: '',
+                        description: '',
+                        sellerName: '',
+                        phone: '',
+                        email: '',
+                        location: '',
+                        agreeTerms: false
+                    },
+                    loginError: '',
+                    signupError: '',
+                    sellError: '',
+                    sellSuccess: '',
+                    
+                    // Filters
+                    filters: {
+                        make: '',
+                        priceRange: '',
+                        year: '',
+                        fuel: ''
+                    },
+                    
+                    // Data
+                    cars: [],
+                    featuredCars: [],
+                    favorites: [],
+                    favoriteIds: new Set(),
+                    
+                    // Pagination
+                    pagination: {
+                        current: 1,
+                        pages: 1,
+                        total: 0
+                    },
+                    
+                    // Toast notifications
+                    toasts: [],
+                    
+                    // Track failed image loads to prevent infinite retry loops
+                    imageLoadErrors: new Set()
+                }
+            },
+            computed: {
+                availableYears() {
+                    const currentYear = new Date().getFullYear();
+                    const years = [];
+                    for (let year = currentYear; year >= 1990; year--) {
+                        years.push(year);
+                    }
+                    return years;
+                },
+                visiblePages() {
+                    const pages = [];
+                    const start = Math.max(1, this.pagination.current - 2);
+                    const end = Math.min(this.pagination.pages, this.pagination.current + 2);
+                    
+                    for (let i = start; i <= end; i++) {
+                        pages.push(i);
+                    }
+                    
+                    return pages;
+                }
+            },
+            methods: {
+                // Enhanced image handling methods
+        getCarImageUrl(car) {
+            // Use the primaryImageUrl from the API response
+            if (car.primaryImageUrl) {
+                return `http://localhost:5000${car.primaryImageUrl}`;
+            }
+            
+            // Fallback: construct URL from images array
+            if (car.images && car.images.length > 0) {
+                return `http://localhost:5000/api/car-image/${car.images[0]}`;
+            }
+            
+            // Final fallback: placeholder
+            return `http://localhost:5000/api/car-image/placeholder.jpg`;
+        },
+        
+        getAllCarImageUrls(car) {
+            // Use the imageUrls from the API response
+            if (car.imageUrls && car.imageUrls.length > 0) {
+                return car.imageUrls.map(url => `http://localhost:5000${url}`);
+            }
+            
+            // Fallback: construct URLs from images array
+            if (car.images && car.images.length > 0) {
+                return car.images.map(img => `http://localhost:5000/api/car-image/${img}`);
+            }
+            
+            // Final fallback: placeholder
+            return [`http://localhost:5000/api/car-image/placeholder.jpg`];
+        },
+        
+        // Handle image load errors with retry mechanism
+        handleImageError(event, car) {
+            const img = event.target;
+            const currentSrc = img.src;
+            const carId = car._id || car.id;
+            
+            // Avoid infinite loops by tracking failed attempts
+            if (this.imageLoadErrors.has(currentSrc)) {
+                // Create a placeholder div with car info
+                this.createImagePlaceholder(img, car);
+                return;
+            }
+            
+            this.imageLoadErrors.add(currentSrc);
+            
+            // Try the API endpoint if we haven't already
+            if (!currentSrc.includes('/api/car-image/')) {
+                const fallbackUrl = `http://localhost:5000/api/car-image/${car.images?.[0] || 'placeholder.jpg'}`;
+                img.src = fallbackUrl;
+                return;
+            }
+            
+            // If API endpoint also fails, create a styled placeholder
+            this.createImagePlaceholder(img, car);
+        },
+        
+        createImagePlaceholder(img, car) {
+            const container = img.parentElement;
+            if (!container) return;
+            
+            // Hide the broken image
+            img.style.display = 'none';
+            
+            // Create a styled placeholder
+            const placeholder = document.createElement('div');
+            placeholder.className = 'image-placeholder';
+            placeholder.style.cssText = `
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                height: 100%;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                text-align: center;
+                border-radius: 8px;
+            `;
+            
+            placeholder.innerHTML = `
+                <div style="font-size: 3rem; margin-bottom: 0.5rem;">🚗</div>
+                <div style="font-size: 0.9rem; font-weight: 500;">${car.make} ${car.model}</div>
+                <div style="font-size: 0.7rem; opacity: 0.8;">${car.year}</div>
+            `;
+            
+            container.appendChild(placeholder);
+        },
+                // Toast Notifications
+                showToast(message, type = 'success') {
+                    const toast = {
+                        id: Date.now(),
+                        message,
+                        type
+                    };
+                    
+                    this.toasts.push(toast);
+                    
+                    setTimeout(() => {
+                        this.toasts = this.toasts.filter(t => t.id !== toast.id);
+                    }, 3000);
+                },
+                
+                // Authentication Methods
+                async checkAuth() {
+                    const token = localStorage.getItem('token');
+                    if (token) {
+                        this.token = token;
+                        try {
+                            const response = await axios.get(`${this.API_URL}/auth/me`, {
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            });
+                            this.user = response.data;
+                            this.isLoggedIn = true;
+                            await this.loadFavorites();
+                        } catch (error) {
+                            console.error('Auth check failed:', error);
+                            this.logout();
+                        }
+                    }
+                },
+                
+                openLogin() {
+                    this.modalType = 'login';
+                    this.showModal = true;
+                },
+                
+                openSignup() {
+                    this.modalType = 'signup';
+                    this.showModal = true;
+                },
+                
+                closeModal() {
+                    this.showModal = false;
+                    this.resetForms();
+                },
+                
+                resetForms() {
+                    this.loginForm = { email: '', password: '' };
+                    this.signupForm = { name: '', email: '', password: '', confirmPassword: '' };
+                    this.sellForm = {
+                        make: '',
+                        model: '',
+                        year: '',
+                        fuel: '',
+                        mileage: '',
+                        transmission: '',
+                        color: '',
+                        price: '',
+                        description: '',
+                        sellerName: '',
+                        phone: '',
+                        email: '',
+                        location: '',
+                        agreeTerms: false
+                    };
+                    this.loginError = '';
+                    this.signupError = '';
+                    this.sellError = '';
+                    this.sellSuccess = '';
+                },
+                
+                async handleLogin() {
+                    this.isLoading = true;
+                    this.loginError = '';
+                    
+                    try {
+                        const response = await axios.post(`${this.API_URL}/auth/login`, this.loginForm);
+                        
+                        this.token = response.data.token;
+                        this.user = response.data.user;
+                        this.isLoggedIn = true;
+                        
+                        localStorage.setItem('token', this.token);
+                        
+                        this.closeModal();
+                        this.showToast('Login successful! Welcome back.');
+                        
+                        // Load favorites after login
+                        await this.loadFavorites();
+                        
+                    } catch (error) {
+                        this.loginError = error.response?.data?.error || 'Login failed. Please try again.';
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+                
+                async handleSignup() {
+                    this.isLoading = true;
+                    this.signupError = '';
+                    
+                    if (this.signupForm.password !== this.signupForm.confirmPassword) {
+                        this.signupError = 'Passwords do not match!';
+                        this.isLoading = false;
+                        return;
+                    }
+                    
+                    try {
+                        const response = await axios.post(`${this.API_URL}/auth/register`, {
+                            name: this.signupForm.name,
+                            email: this.signupForm.email,
+                            password: this.signupForm.password
+                        });
+                        
+                        this.token = response.data.token;
+                        this.user = response.data.user;
+                        this.isLoggedIn = true;
+                        
+                        localStorage.setItem('token', this.token);
+                        
+                        this.closeModal();
+                        this.showToast('Account created successfully! Welcome to AutoSphere.');
+                        
+                    } catch (error) {
+                        this.signupError = error.response?.data?.error || 'Signup failed. Please try again.';
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+
+                async handleSellCar() {
+                    if (!this.isLoggedIn) {
+                        this.sellError = 'Please login to list your car for sale.';
+                        this.showToast('Please login to list your car.', 'error');
+                        this.openLogin();
+                        return;
+                    }
+
+                    this.isLoading = true;
+                    this.sellError = '';
+                    this.sellSuccess = '';
+
+                    try {
+                        // Prepare the car listing data
+                        const carData = {
+                            make: this.sellForm.make,
+                            model: this.sellForm.model,
+                            year: parseInt(this.sellForm.year),
+                            fuel: this.sellForm.fuel,
+                            mileage: parseInt(this.sellForm.mileage),
+                            transmission: this.sellForm.transmission,
+                            color: this.sellForm.color,
+                            price: parseInt(this.sellForm.price),
+                            description: this.sellForm.description,
+                            seller: {
+                                name: this.sellForm.sellerName || this.user.name,
+                                phone: this.sellForm.phone,
+                                email: this.sellForm.email || this.user.email,
+                                location: this.sellForm.location
+                            },
+                            status: 'pending', // Car listings start as pending for review
+                            featured: false
+                        };
+
+                        // In a real application, you would send this to your API
+                        const response = await axios.post(`${this.API_URL}/cars/sell`, carData, {
+                            headers: { 'Authorization': `Bearer ${this.token}` }
+                        });
+
+                        this.sellSuccess = 'Your car has been successfully listed! It will be reviewed and published within 24 hours.';
+                        this.showToast('Car listing submitted successfully!', 'success');
+                        
+                        // Reset the form after successful submission
+                        this.sellForm = {
+                            make: '',
+                            model: '',
+                            year: '',
+                            fuel: '',
+                            mileage: '',
+                            transmission: '',
+                            color: '',
+                            price: '',
+                            description: '',
+                            sellerName: '',
+                            phone: '',
+                            email: '',
+                            location: '',
+                            agreeTerms: false
+                        };
+
+                        // Scroll to success message
+                        setTimeout(() => {
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }, 100);
+
+                    } catch (error) {
+                        console.error('Error submitting car listing:', error);
+                        this.sellError = error.response?.data?.error || 'Failed to submit your car listing. Please try again.';
+                        this.showToast('Failed to submit car listing. Please try again.', 'error');
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+                
+                logout() {
+                    this.isLoggedIn = false;
+                    this.user = { name: '', email: '' };
+                    this.token = null;
+                    this.favorites = [];
+                    this.favoriteIds.clear();
+                    localStorage.removeItem('token');
+                    this.showToast('You have been logged out.');
+                    
+                    if (this.currentView === 'favorites') {
+                        this.currentView = 'home';
+                    }
+                },
+                
+                // Car Methods
+                async loadCars(page = 1) {
+                    this.loadingCars = true;
+                    
+                    try {
+                        const params = {
+                            page,
+                            
+                            search: this.searchQuery,
+                            make: this.filters.make,
+                            year: this.filters.year,
+                            fuel: this.filters.fuel
+                        };
+                        
+                        // Handle price range
+                        if (this.filters.priceRange) {
+                            if (this.filters.priceRange === '0-50000') {
+                                params.priceMax = 50000;
+                            } else if (this.filters.priceRange === '50000-100000') {
+                                params.priceMin = 50000;
+                                params.priceMax = 100000;
+                            } else if (this.filters.priceRange === '100000-200000') {
+                                params.priceMin = 100000;
+                                params.priceMax = 200000;
+                            } else if (this.filters.priceRange === '200000+') {
+                                params.priceMin = 200000;
+                            }
+                        }
+                        
+                        const response = await axios.get(`${this.API_URL}/cars`, { params });
+                        
+                        this.cars = response.data.cars;
+                        this.pagination = response.data.pagination;
+                        
+                    } catch (error) {
+                        console.error('Error loading cars:', error);
+                        this.showToast('Failed to load cars. Please try again.', 'error');
+                    } finally {
+                        this.loadingCars = false;
+                    }
+                },
+                
+                async loadFeaturedCars() {
+                    this.loadingFeatured = true;
+                    
+                    try {
+                        const response = await axios.get(`${this.API_URL}/cars`, {
+                            params: { featured: true, limit: 6 }
+                        });
+                        
+                        this.featuredCars = response.data.cars;
+                        
+                    } catch (error) {
+                        console.error('Error loading featured cars:', error);
+                        this.showToast('Failed to load featured cars.', 'error');
+                    } finally {
+                        this.loadingFeatured = false;
+                    }
+                },
+                
+                async loadFavorites() {
+                    if (!this.isLoggedIn) return;
+                    
+                    this.loadingFavorites = true;
+                    
+                    try {
+                        const response = await axios.get(`${this.API_URL}/favorites`, {
+                            headers: { 'Authorization': `Bearer ${this.token}` }
+                        });
+                        
+                        this.favorites = response.data;
+                        this.favoriteIds = new Set(response.data.map(car => car._id));
+                        
+                    } catch (error) {
+                        console.error('Error loading favorites:', error);
+                    } finally {
+                        this.loadingFavorites = false;
+                    }
+                },
+                
+                searchCars() {
+                    this.currentView = 'browse';
+                    this.loadCars();
+                },
+                
+                changePage(page) {
+                    if (page >= 1 && page <= this.pagination.pages) {
+                        this.loadCars(page);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                },
+                
+                viewCarDetails(car) {
+                    // In a real app, this would navigate to a detailed view
+                    this.showToast(`Viewing details for ${car.make} ${car.model}`);
+                },
+                
+                async toggleFavorite(car) {
+                    if (!this.isLoggedIn) {
+                        this.showToast('Please login to add favorites!', 'error');
+                        this.openLogin();
+                        return;
+                    }
+                    
+                    try {
+                        if (this.isFavorite(car._id)) {
+                            // Remove from favorites
+                            await axios.delete(`${this.API_URL}/favorites/${car._id}`, {
+                                headers: { 'Authorization': `Bearer ${this.token}` }
+                            });
+                            
+                            this.favoriteIds.delete(car._id);
+                            this.favorites = this.favorites.filter(f => f._id !== car._id);
+                            this.showToast('Removed from favorites');
+                            
+                        } else {
+                            // Add to favorites
+                            await axios.post(`${this.API_URL}/favorites/${car._id}`, {}, {
+                                headers: { 'Authorization': `Bearer ${this.token}` }
+                            });
+                            
+                            this.favoriteIds.add(car._id);
+                            if (this.currentView === 'favorites') {
+                                await this.loadFavorites();
+                            }
+                            this.showToast('Added to favorites');
+                        }
+                        
+                    } catch (error) {
+                        console.error('Error toggling favorite:', error);
+                        this.showToast('Failed to update favorites', 'error');
+                    }
+                },
+                
+                isFavorite(carId) {
+                    return this.favoriteIds.has(carId);
+                }
+            },
+            async mounted() {
+                // Check authentication on mount
+                await this.checkAuth();
+                
+                // Load featured cars on home page
+                await this.loadFeaturedCars();
+                
+                // Watch for view changes
+                this.$watch('currentView', (newView) => {
+                    if (newView === 'browse' && this.cars.length === 0) {
+                        this.loadCars();
+                    } else if (newView === 'favorites' && this.isLoggedIn) {
+                        this.loadFavorites();
+                    } else if (newView === 'sell' && this.isLoggedIn) {
+                        // Pre-fill user information in sell form
+                        this.sellForm.sellerName = this.user.name;
+                        this.sellForm.email = this.user.email;
+                    }
+                });
+            }
+        }).mount('#app');
+    </script>
+  </body>
+</html>
