@@ -4,7 +4,7 @@ const { createApp } = Vue;
             data() {
                 return {
                     // API Configuration
-                    API_URL: 'http://localhost:5173/api',
+                    API_URL: 'https://ug-project1.onrender.com',
                     
                     // UI State
                     currentView: 'home',
@@ -81,31 +81,31 @@ const { createApp } = Vue;
         getCarImageUrl(car) {
             // Use the primaryImageUrl from the API response
             if (car.primaryImageUrl) {
-                return `http://localhost:5000${car.primaryImageUrl}`;
+                return `https://ug-project1.onrender.com${car.primaryImageUrl}`;
             }
             
             // Fallback: construct URL from images array
             if (car.images && car.images.length > 0) {
-                return `http://localhost:5000/api/car-image/${car.images[0]}`;
+                return `https://ug-project1.onrender.com/api/car-image/${car.images[0]}`;
             }
             
             // Final fallback: placeholder
-            return `http://localhost:5000/api/car-image/placeholder.jpg`;
+            return `https://ug-project1.onrender.com/api/car-image/placeholder.jpg`;
         },
         
         getAllCarImageUrls(car) {
             // Use the imageUrls from the API response
             if (car.imageUrls && car.imageUrls.length > 0) {
-                return car.imageUrls.map(url => `http://localhost:5000${url}`);
+                return car.imageUrls.map(url => `${this.API_URL}${url}`);
             }
             
             // Fallback: construct URLs from images array
             if (car.images && car.images.length > 0) {
-                return car.images.map(img => `http://localhost:5000/api/car-image/${img}`);
+                return car.images.map(img => `${this.API_URL}/api/car-image/${img}`);
             }
             
             // Final fallback: placeholder
-            return [`http://localhost:5000/api/car-image/placeholder.jpg`];
+            return [`${this.API_URL}/api/car-image/placeholder.jpg`];
         },
         
         // Handle image load errors with retry mechanism
@@ -125,7 +125,7 @@ const { createApp } = Vue;
             
             // Try the API endpoint if we haven't already
             if (!currentSrc.includes('/api/car-image/')) {
-                const fallbackUrl = `http://localhost:5000/api/car-image/${car.images?.[0] || 'placeholder.jpg'}`;
+                const fallbackUrl = `${this.API_URL}/api/car-image/${car.images?.[0] || 'placeholder.jpg'}`;
                 img.src = fallbackUrl;
                 return;
             }
