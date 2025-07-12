@@ -56,6 +56,406 @@
         background: #f8f9fa;
         border-radius: 8px;
       }
+
+      /* Car Details Styles */
+      .car-details-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .car-details-header {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        margin-bottom: 3rem;
+      }
+
+      .car-gallery {
+        position: relative;
+      }
+
+      .main-image {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+      }
+
+      .thumbnail-row {
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+      }
+
+      .thumbnail {
+        width: 80px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 6px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border-color 0.3s ease;
+      }
+
+      .thumbnail.active {
+        border-color: var(--primary-color);
+      }
+
+      .car-info-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      }
+
+      .price-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--gray-light);
+      }
+
+      .main-price {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--primary-color);
+      }
+
+      .price-note {
+        color: var(--gray-medium);
+        font-size: 0.9rem;
+      }
+
+      .car-specs-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .spec-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .spec-label {
+        color: var(--gray-medium);
+        font-weight: 500;
+      }
+
+      .spec-value {
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      .action-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .feature-tabs {
+        display: flex;
+        border-bottom: 2px solid var(--gray-light);
+        margin-bottom: 2rem;
+      }
+
+      .feature-tab {
+        padding: 1rem 2rem;
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-weight: 500;
+        color: var(--gray-medium);
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s ease;
+      }
+
+      .feature-tab.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+      }
+
+      .feature-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      }
+
+      .installment-calculator {
+        background: var(--gray-light);
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+      }
+
+      .calculator-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .calculator-result {
+        background: var(--primary-color);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        text-align: center;
+        margin-top: 1rem;
+      }
+
+      .test-drive-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      }
+
+      .purchase-progress {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+      }
+
+      .progress-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        position: relative;
+      }
+
+      .progress-step:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 15px;
+        right: -50%;
+        width: 100%;
+        height: 2px;
+        background: var(--gray-light);
+      }
+
+      .progress-step.active::after {
+        background: var(--primary-color);
+      }
+
+      .step-circle {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--gray-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      .progress-step.active .step-circle {
+        background: var(--primary-color);
+      }
+
+      .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--primary-color);
+        text-decoration: none;
+        margin-bottom: 2rem;
+        cursor: pointer;
+      }
+
+      /* Modal Styles */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .modal {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        max-width: 500px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .modal-title {
+        margin: 0;
+        color: var(--primary-color);
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--gray-medium);
+      }
+
+      /* Form Styles */
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--text-dark);
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--gray-light);
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+      }
+
+      /* Button Styles */
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .btn-primary {
+        background: var(--primary-color);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #0056b3;
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+      }
+
+      .btn-outline:hover {
+        background: var(--primary-color);
+        color: white;
+      }
+
+      .btn-success {
+        background: #28a745;
+        color: white;
+      }
+
+      .btn-success:hover {
+        background: #218838;
+      }
+
+      /* Toast Styles */
+      .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+      }
+
+      .toast {
+        background: white;
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 0.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        border-left: 4px solid var(--primary-color);
+        animation: slideIn 0.3s ease;
+      }
+
+      .toast.error {
+        border-left-color: #dc3545;
+      }
+
+      .toast.success {
+        border-left-color: #28a745;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .car-details-header {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+
+        .calculator-row {
+          grid-template-columns: 1fr;
+        }
+
+        .action-buttons {
+          grid-template-columns: 1fr;
+        }
+
+        .car-specs-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* CSS Variables (add these if not already present) */
+      :root {
+        --primary-color: #007bff;
+        --text-dark: #333;
+        --text-light: #666;
+        --gray-light: #e9ecef;
+        --gray-medium: #6c757d;
+        --highlight-color: #28a745;
+      }
     </style>
   </head>
   <body>
@@ -121,6 +521,444 @@
 
       <!-- Main Content -->
       <main>
+        <!-- Car Details View -->
+        <div v-if="currentView === 'carDetails' && selectedCar" class="car-details-container">
+          <div class="back-button" @click="goBack">
+            ← Back to {{ previousView === 'browse' ? 'Browse' : 'Home' }}
+          </div>
+
+          <div class="car-details-header">
+            <!-- Car Gallery -->
+            <div class="car-gallery">
+              <img 
+                :src="currentImageUrl" 
+                :alt="`${selectedCar.make} ${selectedCar.model}`"
+                class="main-image"
+                @error="handleImageError($event, selectedCar)"
+              />
+              <div class="thumbnail-row" v-if="carImageUrls.length > 1">
+                <img 
+                  v-for="(imageUrl, index) in carImageUrls" 
+                  :key="index"
+                  :src="imageUrl"
+                  :alt="`${selectedCar.make} ${selectedCar.model} image ${index + 1}`"
+                  class="thumbnail"
+                  :class="{ active: currentImageIndex === index }"
+                  @click="currentImageIndex = index"
+                  @error="handleImageError($event, selectedCar)"
+                />
+              </div>
+            </div>
+
+            <!-- Car Information -->
+            <div class="car-info-section">
+              <h1 style="margin-bottom: 1rem;">{{ selectedCar.make }} {{ selectedCar.model }}</h1>
+              
+              <div class="price-section">
+                <div>
+                  <div class="main-price">AED {{ selectedCar.price?.toLocaleString() || 'N/A' }}</div>
+                  <div class="price-note">*Price includes registration and basic warranty</div>
+                </div>
+                <button
+                  class="favorite-btn"
+                  :class="{active: isFavorite(selectedCar._id)}"
+                  @click="toggleFavorite(selectedCar)"
+                  style="font-size: 1.5rem; background: none; border: none; cursor: pointer;"
+                >
+                  {{ isFavorite(selectedCar._id) ? '❤️' : '🤍' }}
+                </button>
+              </div>
+
+              <div class="car-specs-grid">
+                <div class="spec-item">
+                  <span class="spec-label">Year</span>
+                  <span class="spec-value">{{ selectedCar.year }}</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">Mileage</span>
+                  <span class="spec-value">{{ selectedCar.mileage?.toLocaleString() || 'N/A' }} km</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">Fuel Type</span>
+                  <span class="spec-value">{{ selectedCar.fuel }}</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">Transmission</span>
+                  <span class="spec-value">{{ selectedCar.transmission || 'Automatic' }}</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">Color</span>
+                  <span class="spec-value">{{ selectedCar.color || 'Not specified' }}</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">Body Type</span>
+                  <span class="spec-value">{{ selectedCar.bodyType || 'Sedan' }}</span>
+                </div>
+              </div>
+
+              <div class="action-buttons">
+                <button class="btn btn-primary" @click="openTestDriveModal">
+                  🚗 Book Test Drive
+                </button>
+                <button class="btn btn-success" @click="startPurchaseProcess">
+                  💳 Buy Now
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature Tabs -->
+          <div class="feature-tabs">
+            <button 
+              class="feature-tab" 
+              :class="{ active: activeTab === 'installments' }"
+              @click="activeTab = 'installments'"
+            >
+              💰 Financing & Installments
+            </button>
+            <button 
+              class="feature-tab" 
+              :class="{ active: activeTab === 'details' }"
+              @click="activeTab = 'details'"
+            >
+              📋 Detailed Specs
+            </button>
+            <button 
+              class="feature-tab" 
+              :class="{ active: activeTab === 'features' }"
+              @click="activeTab = 'features'"
+            >
+              ⭐ Features & Extras
+            </button>
+            <button 
+              class="feature-tab" 
+              :class="{ active: activeTab === 'history' }"
+              @click="activeTab = 'history'"
+            >
+              📄 Vehicle History
+            </button>
+          </div>
+
+          <div class="feature-content">
+            <!-- Financing & Installments Tab -->
+            <div v-if="activeTab === 'installments'">
+              <h3 style="margin-bottom: 2rem;">Financing Options</h3>
+              
+              <div class="installment-calculator">
+                <h4 style="margin-bottom: 1.5rem;">💳 Installment Calculator</h4>
+                
+                <div class="calculator-row">
+                  <div class="form-group">
+                    <label class="form-label">Down Payment (AED)</label>
+                    <input 
+                      type="number" 
+                      class="form-input" 
+                      v-model="installmentCalc.downPayment"
+                      :placeholder="Math.round(selectedCar.price * 0.2)"
+                      @input="calculateInstallment"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Loan Term (Years)</label>
+                    <select class="form-input" v-model="installmentCalc.years" @change="calculateInstallment">
+                      <option value="2">2 Years</option>
+                      <option value="3">3 Years</option>
+                      <option value="4">4 Years</option>
+                      <option value="5">5 Years</option>
+                      <option value="7">7 Years</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Interest Rate (%)</label>
+                    <select class="form-input" v-model="installmentCalc.interestRate" @change="calculateInstallment">
+                      <option value="3.5">3.5% (Excellent Credit)</option>
+                      <option value="4.5">4.5% (Good Credit)</option>
+                      <option value="6.0">6.0% (Fair Credit)</option>
+                      <option value="8.0">8.0% (Poor Credit)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="calculator-result">
+                  <h4 style="margin-bottom: 1rem;">Monthly Payment: AED {{ monthlyPayment.toLocaleString() }}</h4>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+                    <div>
+                      <strong>Loan Amount:</strong><br>
+                      AED {{ loanAmount.toLocaleString() }}
+                    </div>
+                    <div>
+                      <strong>Total Interest:</strong><br>
+                      AED {{ totalInterest.toLocaleString() }}
+                    </div>
+                    <div>
+                      <strong>Total Payment:</strong><br>
+                      AED {{ totalPayment.toLocaleString() }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                <h4 style="margin-bottom: 1.5rem;">🏦 Available Financing Partners</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                  <div style="border: 1px solid var(--gray-light); padding: 1.5rem; border-radius: 8px;">
+                    <h5 style="color: var(--primary-color); margin-bottom: 1rem;">Emirates NBD Auto Loan</h5>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                      <li style="margin-bottom: 0.5rem;">✓ Up to 85% financing</li>
+                      <li style="margin-bottom: 0.5rem;">✓ Rates from 3.5% APR</li>
+                      <li style="margin-bottom: 0.5rem;">✓ Quick approval in 24 hours</li>
+                      <li>✓ Flexible repayment terms</li>
+                    </ul>
+                  </div>
+                  <div style="border: 1px solid var(--gray-light); padding: 1.5rem; border-radius: 8px;">
+                    <h5 style="color: var(--primary-color); margin-bottom: 1rem;">ADCB Auto Finance</h5>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                      <li style="margin-bottom: 0.5rem;">✓ Up to 90% financing</li>
+                      <li style="margin-bottom: 0.5rem;">✓ Competitive rates</li>
+                      <li style="margin-bottom: 0.5rem;">✓ No processing fees</li>
+                      <li>✓ Insurance options available</li>
+                    </ul>
+                  </div>
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                  <button class="btn btn-primary" @click="applyForFinancing">
+                    📝 Apply for Pre-Approval
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Detailed Specs Tab -->
+            <div v-if="activeTab === 'details'">
+              <h3 style="margin-bottom: 2rem;">Detailed Specifications</h3>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
+                <div>
+                  <h4 style="color: var(--primary-color); margin-bottom: 1rem;">🚗 Engine & Performance</h4>
+                  <div class="spec-item">
+                    <span class="spec-label">Engine Type</span>
+                    <span class="spec-value">{{ selectedCar.engineType || '2.0L 4-Cylinder' }}</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Horsepower</span>
+                    <span class="spec-value">{{ selectedCar.horsepower || '150 HP' }}</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Torque</span>
+                    <span class="spec-value">{{ selectedCar.torque || '200 Nm' }}</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Top Speed</span>
+                    <span class="spec-value">{{ selectedCar.topSpeed || '180 km/h' }}</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">0-100 km/h</span>
+                    <span class="spec-value">{{ selectedCar.acceleration || '9.5 seconds' }}</span>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 style="color: var(--primary-color); margin-bottom: 1rem;">📏 Dimensions</h4>
+                  <div class="spec-item">
+                    <span class="spec-label">Length</span>
+                    <span class="spec-value">{{ selectedCar.length || '4.5 m' }}</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Width</span>
+                    <span class="spec-value">{{ selectedCar.width || '1.8 m' }}</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Height</span>
+                    <span class="spec-value">{{ selectedCar.height || '1.5 m' }}</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Boot Space</span>
+                    <span class="spec-value">{{ selectedCar.bootSpace || '500 L' }}</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-label">Seating</span>
+                    <span class="spec-value">{{ selectedCar.seating || '5 Passengers' }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top: 3rem;">
+                <h4 style="color: var(--primary-color); margin-bottom: 1rem;">⛽ Fuel Economy</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem;">
+                  <div style="text-align: center; padding: 1.5rem; background: var(--gray-light); border-radius: 8px;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏙️</div>
+                    <div style="font-weight: bold; margin-bottom: 0.5rem;">City</div>
+                    <div>{{ selectedCar.fuelEconomyCity || '12 L/100km' }}</div>
+                  </div>
+                  <div style="text-align: center; padding: 1.5rem; background: var(--gray-light); border-radius: 8px;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🛣️</div>
+                    <div style="font-weight: bold; margin-bottom: 0.5rem;">Highway</div>
+                    <div>{{ selectedCar.fuelEconomyHighway || '8 L/100km' }}</div>
+                  </div>
+                  <div style="text-align: center; padding: 1.5rem; background: var(--gray-light); border-radius: 8px;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚖️</div>
+                    <div style="font-weight: bold; margin-bottom: 0.5rem;">Combined</div>
+                    <div>{{ selectedCar.fuelEconomyCombined || '10 L/100km' }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Features & Extras Tab -->
+            <div v-if="activeTab === 'features'">
+              <h3 style="margin-bottom: 2rem;">Features & Equipment</h3>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
+                <div>
+                  <h4 style="color: var(--primary-color); margin-bottom: 1rem;">🛡️ Safety Features</h4>
+                  <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 0.5rem;">✓ ABS Braking System</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Electronic Stability Control</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Multiple Airbags</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Parking Sensors</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Reverse Camera</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Blind Spot Monitoring</li>
+                    <li>✓ Lane Departure Warning</li>
+                  </ul>
+                  
+                  <h4 style="color: var(--primary-color); margin: 2rem 0 1rem 0;">🎵 Entertainment</h4>
+                  <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 0.5rem;">✓ Touchscreen Infotainment</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Bluetooth Connectivity</li>
+                    <li style="margin-bottom: 0.5rem;">✓ USB Ports</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Premium Sound System</li>
+                    <li>✓ Navigation System</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h4 style="color: var(--primary-color); margin-bottom: 1rem;">❄️ Comfort Features</h4>
+                  <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 0.5rem;">✓ Automatic Climate Control</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Power Steering</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Electric Windows</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Keyless Entry</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Push Start Button</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Cruise Control</li>
+                    <li>✓ Adjustable Seats</li>
+                  </ul>
+                  
+                  <h4 style="color: var(--primary-color); margin: 2rem 0 1rem 0;">💎 Premium Options</h4>
+                  <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 0.5rem;">✓ Leather Seats</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Sunroof</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Alloy Wheels</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Fog Lights</li>
+                    <li>✓ Tinted Windows</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Vehicle History Tab -->
+            <div v-if="activeTab === 'history'">
+              <h3 style="margin-bottom: 2rem;">Vehicle History & Condition</h3>
+              
+              <div style="display: grid; gap: 2rem;">
+                <div style="background: #f8f9fa; padding: 2rem; border-radius: 12px; border-left: 4px solid var(--highlight-color);">
+                  <h4 style="color: var(--highlight-color); margin-bottom: 1rem;">✅ Verified & Inspected</h4>
+                  <p>This vehicle has passed our comprehensive 120-point inspection and comes with a detailed condition report.</p>
+                  <div style="margin-top: 1rem;">
+                    <span style="background: var(--highlight-color); color: white; padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">
+                      INSPECTION PASSED
+                    </span>
+                  </div>
+                </div>
+
+                <div style="background: white; padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-light);">
+                  <h4 style="color: var(--primary-color); margin-bottom: 1.5rem;">📋 Inspection Report</h4>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div>
+                      <div class="spec-item">
+                        <span class="spec-label">Engine Condition</span>
+                        <span class="spec-value" style="color: var(--highlight-color);">✅ Excellent</span>
+                      </div>
+                      <div class="spec-item">
+                        <span class="spec-label">Transmission</span>
+                        <span class="spec-value" style="color: var(--highlight-color);">✅ Very Good</span>
+                      </div>
+                      <div class="spec-item">
+                        <span class="spec-label">Brakes</span>
+                        <span class="spec-value" style="color: var(--highlight-color);">✅ Good</span>
+                      </div>
+                      <div class="spec-item">
+                        <span class="spec-label">Suspension</span>
+                        <span class="spec-value" style="color: var(--highlight-color);">✅ Very Good</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="spec-item">
+                        <span class="spec-label">Body Condition</span>
+                        <span class="spec-value" style="color: var(--highlight-color);">✅ Excellent</span>
+                      </div>
+                      <div class="spec-item">
+                        <span class="spec-label">Interior</span>
+                        <span class="spec-value" style="color: var(--highlight-color);">✅ Very Good</span>
+                      </div>
+                      <div class="spec-item">
+                        <span class="spec-label">Tires</span>
+                        <span class="spec-value" style="color: var(--highlight-color);">✅ Good</span>
+                      </div>
+                      <div class="spec-item">
+                        <span class="spec-label">Electronics</span>
+                        <span class="spec-value" style="color: var(--highlight-color);">✅ Excellent</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="background: white; padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-light);">
+                  <h4 style="color: var(--primary-color); margin-bottom: 1.5rem;">🛡️ Warranty & Service</h4>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                      <h5 style="margin-bottom: 1rem;">Warranty Included</h5>
+                      <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.5rem;">✓ 6 months comprehensive warranty</li>
+                        <li style="margin-bottom: 0.5rem;">✓ 24/7 roadside assistance</li>
+                        <li>✓ Free first service</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h5 style="margin-bottom: 1rem;">Service History</h5>
+                      <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.5rem;">✓ Regular maintenance records</li>
+                        <li style="margin-bottom: 0.5rem;">✓ Authorized service centers</li>
+                        <li>✓ All receipts available</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="background: white; padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-light);">
+                  <h4 style="color: var(--primary-color); margin-bottom: 1.5rem;">🔒 Our Guarantee</h4>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; text-align: center;">
+                    <div>
+                      <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔄</div>
+                      <h5>7-Day Return</h5>
+                      <p style="font-size: 0.9rem; color: var(--gray-medium);">Not satisfied? Return within 7 days</p>
+                    </div>
+                    <div>
+                      <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🛡️</div>
+                      <h5>Protected Purchase</h5>
+                      <p style="font-size: 0.9rem; color: var(--gray-medium);">Your money is safe with our guarantee</p>
+                    </div>
+                    <div>
+                      <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📞</div>
+                      <h5>24/7 Support</h5>
+                      <p style="font-size: 0.9rem; color: var(--gray-medium);">We're here whenever you need us</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Home View -->
         <div v-if="currentView === 'home'">
           <!-- Hero Section -->
@@ -420,21 +1258,6 @@
           </div>
         </div>
 
-        <!-- Toast Container -->
-        <div
-          class="toast-container"
-          style="position: fixed; top: 20px; right: 20px; z-index: 1000"
-        >
-          <div
-            v-for="toast in toasts"
-            :key="toast.id"
-            class="toast"
-            :class="toast.type"
-          >
-            {{ toast.message }}
-          </div>
-        </div>
-
         <!-- Favorites View -->
         <div v-if="currentView === 'favorites'" class="container">
           <h1 style="margin-bottom: 2rem">My Favorite Cars</h1>
@@ -724,7 +1547,7 @@
                   :disabled="isLoading || !sellForm.agreeTerms"
                 >
                   <span v-if="isLoading" class="loading-spinner"></span>
-                  <span v-else>🚀 List My Car</span>
+                  <span v-else">🚀 List My Car</span>
                 </button>
               </form>
             </div>
@@ -986,8 +1809,20 @@
         </div>
       </footer>
 
+      <!-- Toast Container -->
+      <div class="toast-container">
+        <div
+          v-for="toast in toasts"
+          :key="toast.id"
+          class="toast"
+          :class="toast.type"
+        >
+          {{ toast.message }}
+        </div>
+      </div>
+
       <!-- Login/Signup Modal -->
-      <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
+      <div v-if="showModal && modalType !== 'testDrive' && modalType !== 'financing'" class="modal-overlay" @click.self="closeModal">
         <div class="modal">
           <div class="modal-header">
             <h2 class="modal-title">Welcome to AutoSphere</h2>
@@ -1130,6 +1965,465 @@
           </form>
         </div>
       </div>
+
+      <!-- Test Drive Modal -->
+      <div v-if="showModal && modalType === 'testDrive'" class="modal-overlay" @click.self="closeModal">
+        <div class="modal">
+          <div class="modal-header">
+            <h2 class="modal-title">🚗 Book a Test Drive</h2>
+            <button class="close-btn" @click="closeModal">✕</button>
+          </div>
+
+          <div v-if="selectedCar" style="margin-bottom: 2rem; padding: 1rem; background: var(--gray-light); border-radius: 8px;">
+            <h4 style="margin-bottom: 0.5rem;">{{ selectedCar.make }} {{ selectedCar.model }}</h4>
+            <p style="color: var(--gray-medium); margin: 0;">{{ selectedCar.year }} • AED {{ selectedCar.price?.toLocaleString() }}</p>
+          </div>
+
+          <form @submit.prevent="handleTestDriveBooking">
+            <div class="form-group">
+              <label class="form-label">Your Name *</label>
+              <input
+                type="text"
+                class="form-input"
+                v-model="testDriveForm.name"
+                :placeholder="user.name || 'Your full name'"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email *</label>
+              <input
+                type="email"
+                class="form-input"
+                v-model="testDriveForm.email"
+                :placeholder="user.email || 'your.email@example.com'"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number *</label>
+              <input
+                type="tel"
+                class="form-input"
+                v-model="testDriveForm.phone"
+                placeholder="+971 50 XXX XXXX"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Preferred Date *</label>
+              <input
+                type="date"
+                class="form-input"
+                v-model="testDriveForm.date"
+                :min="new Date().toISOString().split('T')[0]"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Preferred Time *</label>
+              <select class="form-input" v-model="testDriveForm.time" required>
+                <option value="">Select a time</option>
+                <option value="09:00">9:00 AM</option>
+                <option value="10:00">10:00 AM</option>
+                <option value="11:00">11:00 AM</option>
+                <option value="12:00">12:00 PM</option>
+                <option value="13:00">1:00 PM</option>
+                <option value="14:00">2:00 PM</option>
+                <option value="15:00">3:00 PM</option>
+                <option value="16:00">4:00 PM</option>
+                <option value="17:00">5:00 PM</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Special Requests</label>
+              <textarea
+                class="form-input"
+                v-model="testDriveForm.notes"
+                rows="3"
+                placeholder="Any specific requirements or questions?"
+              ></textarea>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+              <h5 style="margin-bottom: 0.5rem;">📋 What to Bring:</h5>
+              <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.9rem; color: var(--gray-medium);">
+                <li>Valid UAE driving license</li>
+                <li>Emirates ID or passport</li>
+                <li>Comfortable shoes for driving</li>
+              </ul>
+            </div>
+
+            <div v-if="testDriveError" style="color: red; margin-bottom: 1rem; font-size: 0.9rem">
+              {{ testDriveError }}
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+              style="width: 100%"
+              :disabled="isLoading"
+            >
+              <span v-if="isLoading" class="loading-spinner"></span>
+              <span v-else>📅 Confirm Test Drive</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Financing Modal -->
+      <div v-if="showModal && modalType === 'financing'" class="modal-overlay" @click.self="closeModal">
+        <div class="modal">
+          <div class="modal-header">
+            <h2 class="modal-title">💳 Apply for Financing</h2>
+            <button class="close-btn" @click="closeModal">✕</button>
+          </div>
+
+          <form @submit.prevent="handleFinancingApplication">
+            <div style="background: var(--gray-light); padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+              <h5 style="margin-bottom: 0.5rem;">🔒 Secure Application</h5>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--gray-medium);">
+                Your information is encrypted and shared only with approved financing partners.
+              </p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input
+                type="text"
+                class="form-input"
+                v-model="financingForm.name"
+                :placeholder="user.name || 'Your full name'"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email *</label>
+              <input
+                type="email"
+                class="form-input"
+                v-model="financingForm.email"
+                :placeholder="user.email || 'your.email@example.com'"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number *</label>
+              <input
+                type="tel"
+                class="form-input"
+                v-model="financingForm.phone"
+                placeholder="+971 50 XXX XXXX"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Monthly Income (AED) *</label>
+              <input
+                type="number"
+                class="form-input"
+                v-model="financingForm.income"
+                placeholder="15000"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Employment Type *</label>
+              <select class="form-input" v-model="financingForm.employment" required>
+                <option value="">Select employment type</option>
+                <option value="employed">Employed</option>
+                <option value="self-employed">Self-Employed</option>
+                <option value="business-owner">Business Owner</option>
+                <option value="retired">Retired</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Bank *</label>
+              <select class="form-input" v-model="financingForm.bank" required>
+                <option value="">Select your bank</option>
+                <option value="emirates-nbd">Emirates NBD</option>
+                <option value="adcb">ADCB</option>
+                <option value="fab">FAB</option>
+                <option value="nbd">NBD</option>
+                <option value="cbd">CBD</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div v-if="financingError" style="color: red; margin-bottom: 1rem; font-size: 0.9rem">
+              {{ financingError }}
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+              style="width: 100%"
+              :disabled="isLoading"
+            >
+              <span v-if="isLoading" class="loading-spinner"></span>
+              <span v-else>📝 Submit Application</span>
+            </button>
+
+            <p style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: var(--gray-medium);">
+              By submitting, you agree to share your information with our financing partners.
+            </p>
+          </form>
+        </div>
+      </div>
+
+      <!-- Purchase Modal -->
+      <div v-if="showModal && modalType === 'purchase'" class="modal-overlay" @click.self="closeModal">
+        <div class="modal" style="max-width: 600px;">
+          <div class="modal-header">
+            <h2 class="modal-title">🛒 Complete Your Purchase</h2>
+            <button class="close-btn" @click="closeModal">✕</button>
+          </div>
+
+          <!-- Purchase Progress -->
+          <div class="purchase-progress">
+            <div class="progress-step" :class="{ active: purchaseStep >= 1 }">
+              <div class="step-circle">1</div>
+              <span>Details</span>
+            </div>
+            <div class="progress-step" :class="{ active: purchaseStep >= 2 }">
+              <div class="step-circle">2</div>
+              <span>Payment</span>
+            </div>
+            <div class="progress-step" :class="{ active: purchaseStep >= 3 }">
+              <div class="step-circle">3</div>
+              <span>Delivery</span>
+            </div>
+          </div>
+
+          <!-- Step 1: Purchase Details -->
+          <div v-if="purchaseStep === 1">
+            <h4 style="margin-bottom: 1.5rem;">📋 Purchase Information</h4>
+            
+            <div v-if="selectedCar" style="background: var(--gray-light); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+              <h5>{{ selectedCar.make }} {{ selectedCar.model }} {{ selectedCar.year }}</h5>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; font-size: 0.9rem;">
+                <div>Vehicle Price: <strong>AED {{ selectedCar.price?.toLocaleString() }}</strong></div>
+                <div>Registration: <strong>AED 2,500</strong></div>
+                <div>Insurance: <strong>AED 3,200</strong></div>
+                <div>Service Fee: <strong>AED 1,000</strong></div>
+              </div>
+              <hr style="margin: 1rem 0; border: none; border-top: 1px solid #ccc;">
+              <div style="font-size: 1.1rem; font-weight: bold;">
+                Total: AED {{ ((selectedCar.price || 0) + 6700).toLocaleString() }}
+              </div>
+            </div>
+
+            <form @submit.prevent="proceedToPayment">
+              <div class="form-group">
+                <label class="form-label">Full Name *</label>
+                <input
+                  type="text"
+                  class="form-input"
+                  v-model="purchaseForm.name"
+                  :placeholder="user.name || 'Your full name'"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email *</label>
+                <input
+                  type="email"
+                  class="form-input"
+                  v-model="purchaseForm.email"
+                  :placeholder="user.email || 'your.email@example.com'"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone Number *</label>
+                <input
+                  type="tel"
+                  class="form-input"
+                  v-model="purchaseForm.phone"
+                  placeholder="+971 50 XXX XXXX"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Emirates ID *</label>
+                <input
+                  type="text"
+                  class="form-input"
+                  v-model="purchaseForm.emiratesId"
+                  placeholder="784-XXXX-XXXXXXX-X"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Delivery Address *</label>
+                <textarea
+                  class="form-input"
+                  v-model="purchaseForm.address"
+                  rows="3"
+                  placeholder="Your complete address for vehicle delivery"
+                  required
+                ></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width: 100%;">
+                Continue to Payment →
+              </button>
+            </form>
+          </div>
+
+          <!-- Step 2: Payment -->
+          <div v-if="purchaseStep === 2">
+            <h4 style="margin-bottom: 1.5rem;">💳 Payment Method</h4>
+            
+            <div style="display: grid; gap: 1rem; margin-bottom: 2rem;">
+              <div 
+                class="payment-option" 
+                :class="{ active: paymentMethod === 'card' }"
+                @click="paymentMethod = 'card'"
+                style="border: 2px solid var(--gray-light); padding: 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;"
+              >
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  <input type="radio" v-model="paymentMethod" value="card" />
+                  <div>
+                    <h5 style="margin-bottom: 0.25rem;">💳 Credit/Debit Card</h5>
+                    <small style="color: var(--gray-medium);">Secure payment via Visa, Mastercard, or local cards</small>
+                  </div>
+                </div>
+              </div>
+              
+              <div 
+                class="payment-option" 
+                :class="{ active: paymentMethod === 'bank' }"
+                @click="paymentMethod = 'bank'"
+                style="border: 2px solid var(--gray-light); padding: 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;"
+              >
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  <input type="radio" v-model="paymentMethod" value="bank" />
+                  <div>
+                    <h5 style="margin-bottom: 0.25rem;">🏦 Bank Transfer</h5>
+                    <small style="color: var(--gray-medium);">Direct transfer from your bank account</small>
+                  </div>
+                </div>
+              </div>
+              
+              <div 
+                class="payment-option" 
+                :class="{ active: paymentMethod === 'financing' }"
+                @click="paymentMethod = 'financing'"
+                style="border: 2px solid var(--gray-light); padding: 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;"
+              >
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  <input type="radio" v-model="paymentMethod" value="financing" />
+                  <div>
+                    <h5 style="margin-bottom: 0.25rem;">📊 Auto Financing</h5>
+                    <small style="color: var(--gray-medium);">Monthly payments starting from AED {{ monthlyPayment.toLocaleString() }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Payment Form -->
+            <div v-if="paymentMethod === 'card'" style="background: var(--gray-light); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+              <div class="form-group">
+                <label class="form-label">Card Number *</label>
+                <input
+                  type="text"
+                  class="form-input"
+                  placeholder="1234 5678 9012 3456"
+                  maxlength="19"
+                />
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">Expiry Date *</label>
+                  <input
+                    type="text"
+                    class="form-input"
+                    placeholder="MM/YY"
+                    maxlength="5"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">CVV *</label>
+                  <input
+                    type="text"
+                    class="form-input"
+                    placeholder="123"
+                    maxlength="4"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <button type="button" class="btn btn-outline" @click="purchaseStep = 1">
+                ← Back
+              </button>
+              <button type="button" class="btn btn-primary" @click="proceedToDelivery">
+                Continue to Delivery →
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 3: Delivery -->
+          <div v-if="purchaseStep === 3">
+            <h4 style="margin-bottom: 1.5rem;">🚚 Delivery Options</h4>
+            
+            <div style="display: grid; gap: 1rem; margin-bottom: 2rem;">
+              <div 
+                class="delivery-option" 
+                :class="{ active: deliveryMethod === 'home' }"
+                @click="deliveryMethod = 'home'"
+                style="border: 2px solid var(--gray-light); padding: 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;"
+              >
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  <input type="radio" v-model="deliveryMethod" value="home" />
+                  <div>
+                    <h5 style="margin-bottom: 0.25rem;">🏠 Home Delivery</h5>
+                    <small style="color: var(--gray-medium);">Free delivery within 3-5 business days</small>
+                  </div>
+                </div>
+              </div>
+              
+              <div 
+                class="delivery-option" 
+                :class="{ active: deliveryMethod === 'pickup' }"
+                @click="deliveryMethod = 'pickup'"
+                style="border: 2px solid var(--gray-light); padding: 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;"
+              >
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  <input type="radio" v-model="deliveryMethod" value="pickup" />
+                  <div>
+                    <h5 style="margin-bottom: 0.25rem;">🏢 Showroom Pickup</h5>
+                    <small style="color: var(--gray-medium);">Ready for pickup within 24 hours</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+              <h5 style="margin-bottom: 1rem;">📋 What Happens Next:</h5>
+              <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.9rem; color: var(--gray-medium);">
+                <li>Payment processing and verification</li>
+                <li>Vehicle preparation and final inspection</li>
+                <li>Documentation and registration transfer</li>
+                <li>Delivery or pickup coordination</li>
+                <li>7-day return guarantee period begins</li>
+              </ul>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <button type="button" class="btn btn-outline" @click="purchaseStep = 2">
+                ← Back
+              </button>
+              <button type="button" class="btn btn-success" @click="completePurchase" :disabled="isLoading">
+                <span v-if="isLoading" class="loading-spinner"></span>
+                <span v-else">🎉 Complete Purchase</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script>
@@ -1143,6 +2437,7 @@
                     
                     // UI State
                     currentView: 'home',
+                    previousView: 'home',
                     showModal: false,
                     modalType: 'login',
                     isLoading: false,
@@ -1157,6 +2452,11 @@
                         name: '',
                         email: ''
                     },
+                    
+                    // Car Details State
+                    selectedCar: null,
+                    activeTab: 'installments',
+                    currentImageIndex: 0,
                     
                     // Forms
                     searchQuery: '',
@@ -1186,10 +2486,49 @@
                         location: '',
                         agreeTerms: false
                     },
+                    testDriveForm: {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        date: '',
+                        time: '',
+                        notes: ''
+                    },
+                    financingForm: {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        income: '',
+                        employment: '',
+                        bank: ''
+                    },
+                    purchaseForm: {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        emiratesId: '',
+                        address: ''
+                    },
+                    
+                    // Purchase Process
+                    purchaseStep: 1,
+                    paymentMethod: 'card',
+                    deliveryMethod: 'home',
+                    
+                    // Installment Calculator
+                    installmentCalc: {
+                        downPayment: 0,
+                        years: 3,
+                        interestRate: 4.5
+                    },
+                    
+                    // Error States
                     loginError: '',
                     signupError: '',
                     sellError: '',
                     sellSuccess: '',
+                    testDriveError: '',
+                    financingError: '',
                     
                     // Filters
                     filters: {
@@ -1228,6 +2567,39 @@
                     }
                     return years;
                 },
+                carImageUrls() {
+                    if (!this.selectedCar) return [];
+                    return this.getAllCarImageUrls(this.selectedCar);
+                },
+                currentImageUrl() {
+                    if (!this.selectedCar || this.carImageUrls.length === 0) {
+                        return `${this.API_URL}/api/car-image/placeholder.jpg`;
+                    }
+                    return this.carImageUrls[this.currentImageIndex] || this.carImageUrls[0];
+                },
+                loanAmount() {
+                    if (!this.selectedCar) return 0;
+                    const price = this.selectedCar.price || 0;
+                    const downPayment = this.installmentCalc.downPayment || (price * 0.2);
+                    return Math.max(0, price - downPayment);
+                },
+                monthlyPayment() {
+                    const principal = this.loanAmount;
+                    const months = this.installmentCalc.years * 12;
+                    const rate = this.installmentCalc.interestRate / 100 / 12;
+                    
+                    if (principal === 0 || rate === 0) return 0;
+                    
+                    const payment = principal * (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
+                    return Math.round(payment);
+                },
+                totalInterest() {
+                    const totalPayments = this.monthlyPayment * this.installmentCalc.years * 12;
+                    return Math.max(0, totalPayments - this.loanAmount);
+                },
+                totalPayment() {
+                    return this.loanAmount + this.totalInterest + (this.installmentCalc.downPayment || 0);
+                },
                 visiblePages() {
                     const pages = [];
                     const start = Math.max(1, this.pagination.current - 2);
@@ -1241,6 +2613,174 @@
                 }
             },
             methods: {
+                // Navigation Methods
+                viewCarDetails(car) {
+                    this.selectedCar = car;
+                    this.previousView = this.currentView;
+                    this.currentView = 'carDetails';
+                    this.currentImageIndex = 0;
+                    this.activeTab = 'installments';
+                    
+                    // Initialize installment calculator with defaults
+                    this.installmentCalc.downPayment = Math.round(car.price * 0.2);
+                    
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                },
+                
+                goBack() {
+                    this.currentView = this.previousView;
+                    this.selectedCar = null;
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                },
+                
+                // Modal Methods
+                openTestDriveModal() {
+                    if (!this.isLoggedIn) {
+                        this.showToast('Please login to book a test drive!', 'error');
+                        this.openLogin();
+                        return;
+                    }
+                    
+                    this.modalType = 'testDrive';
+                    this.showModal = true;
+                    
+                    // Pre-fill form with user data
+                    this.testDriveForm.name = this.user.name;
+                    this.testDriveForm.email = this.user.email;
+                },
+                
+                startPurchaseProcess() {
+                    if (!this.isLoggedIn) {
+                        this.showToast('Please login to purchase this car!', 'error');
+                        this.openLogin();
+                        return;
+                    }
+                    
+                    this.modalType = 'purchase';
+                    this.showModal = true;
+                    this.purchaseStep = 1;
+                    
+                    // Pre-fill form with user data
+                    this.purchaseForm.name = this.user.name;
+                    this.purchaseForm.email = this.user.email;
+                },
+                
+                applyForFinancing() {
+                    if (!this.isLoggedIn) {
+                        this.showToast('Please login to apply for financing!', 'error');
+                        this.openLogin();
+                        return;
+                    }
+                    
+                    this.modalType = 'financing';
+                    this.showModal = true;
+                    
+                    // Pre-fill form with user data
+                    this.financingForm.name = this.user.name;
+                    this.financingForm.email = this.user.email;
+                },
+                
+                // Form Handlers
+                async handleTestDriveBooking() {
+                    this.isLoading = true;
+                    this.testDriveError = '';
+                    
+                    try {
+                        // Simulate API call since test drive endpoint doesn't exist
+                        await new Promise(resolve => setTimeout(resolve, 1500));
+                        
+                        this.showToast(`Test drive scheduled for ${this.testDriveForm.date} at ${this.testDriveForm.time}!`, 'success');
+                        this.closeModal();
+                        
+                        // Reset form
+                        this.testDriveForm = {
+                            name: '',
+                            email: '',
+                            phone: '',
+                            date: '',
+                            time: '',
+                            notes: ''
+                        };
+                        
+                    } catch (error) {
+                        this.testDriveError = 'Failed to book test drive. Please try again.';
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+                
+                async handleFinancingApplication() {
+                    this.isLoading = true;
+                    this.financingError = '';
+                    
+                    try {
+                        // Simulate API call
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                        
+                        this.showToast('Financing application submitted! You will receive a response within 24 hours.', 'success');
+                        this.closeModal();
+                        
+                        // Reset form
+                        this.financingForm = {
+                            name: '',
+                            email: '',
+                            phone: '',
+                            income: '',
+                            employment: '',
+                            bank: ''
+                        };
+                        
+                    } catch (error) {
+                        this.financingError = 'Failed to submit application. Please try again.';
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+                
+                proceedToPayment() {
+                    this.purchaseStep = 2;
+                },
+                
+                proceedToDelivery() {
+                    this.purchaseStep = 3;
+                },
+                
+                async completePurchase() {
+                    this.isLoading = true;
+                    
+                    try {
+                        // Simulate purchase processing
+                        await new Promise(resolve => setTimeout(resolve, 3000));
+                        
+                        this.showToast('🎉 Purchase completed successfully! You will receive confirmation details via email.', 'success');
+                        this.closeModal();
+                        
+                        // Reset purchase form
+                        this.purchaseForm = {
+                            name: '',
+                            email: '',
+                            phone: '',
+                            emiratesId: '',
+                            address: ''
+                        };
+                        this.purchaseStep = 1;
+                        
+                        // Go back to previous view
+                        this.goBack();
+                        
+                    } catch (error) {
+                        this.showToast('Purchase failed. Please try again.', 'error');
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+                
+                // Calculator Methods
+                calculateInstallment() {
+                    // Reactive calculation handled by computed properties
+                },
+                
                 // Enhanced image handling methods
                 getCarImageUrl(car) {
                     // Use the primaryImageUrl from the API response
@@ -1397,10 +2937,35 @@
                         location: '',
                         agreeTerms: false
                     };
+                    this.testDriveForm = {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        date: '',
+                        time: '',
+                        notes: ''
+                    };
+                    this.financingForm = {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        income: '',
+                        employment: '',
+                        bank: ''
+                    };
+                    this.purchaseForm = {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        emiratesId: '',
+                        address: ''
+                    };
                     this.loginError = '';
                     this.signupError = '';
                     this.sellError = '';
                     this.sellSuccess = '';
+                    this.testDriveError = '';
+                    this.financingError = '';
                 },
                 
                 async handleLogin() {
@@ -1617,11 +3182,6 @@
                     }
                 },
                 
-                viewCarDetails(car) {
-                    // In a real app, this would navigate to a detailed view
-                    this.showToast(`Viewing details for ${car.make} ${car.model}`);
-                },
-                
                 async toggleFavorite(car) {
                     if (!this.isLoggedIn) {
                         this.showToast('Please login to add favorites!', 'error');
@@ -1681,6 +3241,46 @@
                         this.sellForm.sellerName = this.user.name;
                         this.sellForm.email = this.user.email;
                     }
+                });
+                
+                // Watch for filter changes
+                this.$watch('filters', () => {
+                    if (this.currentView === 'browse') {
+                        this.loadCars();
+                    }
+                }, { deep: true });
+                
+                // Style payment and delivery options
+                this.$nextTick(() => {
+                    // Add dynamic styles for payment options
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        .payment-option.active,
+                        .delivery-option.active {
+                            border-color: var(--primary-color) !important;
+                            background: rgba(0, 123, 255, 0.05);
+                        }
+                        .form-tabs {
+                            display: flex;
+                            border-bottom: 2px solid var(--gray-light);
+                            margin-bottom: 2rem;
+                        }
+                        .tab-btn {
+                            padding: 1rem 2rem;
+                            border: none;
+                            background: none;
+                            cursor: pointer;
+                            font-weight: 500;
+                            color: var(--gray-medium);
+                            border-bottom: 3px solid transparent;
+                            transition: all 0.3s ease;
+                        }
+                        .tab-btn.active {
+                            color: var(--primary-color);
+                            border-bottom-color: var(--primary-color);
+                        }
+                    `;
+                    document.head.appendChild(style);
                 });
             }
         }).mount('#app');
